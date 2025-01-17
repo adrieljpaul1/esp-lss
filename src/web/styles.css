@@ -1,15 +1,14 @@
-/* General Styles */
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #282828; /* Dark background */
+  font-family: Hack, JetBrains Mono;
+  background-color: #1D2021; /* Dark background */
   color: #ebdbb2;          /* Foreground text */
 }
 
 /* Header */
 header {
-  background-color: #3c3836; /* Slightly lighter background */
+  background-color: #32302F; /* Slightly lighter background */
   color: #fabd2f;           /* Yellow accent for text */
   text-align: center;
   padding: 1rem;
@@ -29,12 +28,83 @@ a {
 a:hover {
   color: #fe8019; /* Orange accent on hover */
 }
+.single-line {
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: auto;     /*Optional: hides overflowing text */
+  text-overflow: ellipsis; /* Optional: adds "..." to overflowing text */
+}
 
 /* Footer */
 footer {
-  background-color: #3c3836;
+  background-color: #32302F;
   color: #ebdbb2;
   text-align: center;
   padding: 1rem;
   font-size: 0.9rem;
+}
+div {
+  width: 500px;
+  margin:auto;
+}
+.frosted-glass-h {
+  width: 500px;
+  background: #1D2021; 
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Border to match the frosted look */
+  border-radius: 15px; /* Rounded corners */
+  padding: 2px;
+  text-align: center;
+  color: #fabd2f;
+  font-family: JetBrains Mono;
+  overflow: auto;
+  white-space: nowrap;
+}
+.frosted-glass-t {
+  width: 300px;
+  background: #1D2021; 
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Border to match the frosted look */
+  border-radius: 15px; /* Rounded corners */
+  padding: 2px;
+  text-align: center;
+  color: #fabd2f;
+  font-family: JetBrains Mono;
+  overflow: auto;
+  white-space: nowrap;
+}
+.lightly-right {
+  position: relative;
+  right: -30px;
+}
+.frosted-glass-b {
+  height: 325px;
+  background: #1D2021; 
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Border to match the frosted look */
+  border-radius: 15px; /* Rounded corners */
+  padding: 2px;
+  text-align: left; /* Align text to the left */
+  color: #fabd2f;
+  font-family: JetBrains Mono;
+  overflow: auto; /* Allow scrolling if content overflows */
+}
+
+ul {
+  list-style-position: inside; /* Moves bullets inside the padding area */
+  padding-left: 20px; /* Add some padding for better alignment */
+  margin: 0; /* Removes unnecessary margin */
+}
+
+li {
+  text-indent: 0; /* No negative indent */
+  white-space: normal; /* Allow line breaks in list items */
+  margin-bottom: 5px; /* Add spacing between list items */
+}
+
+.side-side-1 {
+  width: 300px;
+  display: inline-block;
 }

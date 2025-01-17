@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Moisture Dashboard</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .sensor-values {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .sensor {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            width: 150px;
+        }
+        .sensor h2 {
+            margin: 0;
+            color: #333;
+        }
+        .sensor .value {
+            font-size: 2em;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Soil Moisture Levels</h1>
+    <div id="sensor-data" class="sensor-values">
+        <!-- Sensors will be dynamically populated -->
+    </div>
+
+    <script>
+        const MQTT_BROKER = "wss://5.196.78.28:8083"; // Use WebSocket URL of your MQTT broker
+        const TOPIC = "sector_2";
+
+        // Connect to the MQTT broker
+        const client = mqtt.connect(MQTT_BROKER);
+
+        // Display connection status
+        client.on('connect', () => {
+            console.log("Connected to MQTT broker");
+            client.subscribe(TOPIC, (err) => {
+                if (err) {
+                    console.error("Failed to subscribe:", err);
+                } else {
+                    console.log("Subscribed to topic:", TOPIC);
+                }
+            });
+        });
+
+        client.on('error', (err) => {
+            console.error("MQTT Connection Error:", err);
+        });
+
+        // Handle incoming messages
+        client.on('message', (topic, message) => {
+            if (topic === TOPIC) {
+                try {
+                    const data = JSON.parse(message.toString());
+                    updateSensorData(data.moisture);
+                } catch (error) {
+                    console.error("Error parsing message:", error);
+                }
+            }
+        });
+
+        // Update sensor data in the webpage
+        function updateSensorData(values) {
+            const sensorDataDiv = document.getElementById("sensor-data");
+            sensorDataDiv.innerHTML = ""; // Clear existing values
+            values.forEach((value, index) => {
+                const sensorDiv = document.createElement("div");
+                sensorDiv.className = "sensor";
+                sensorDiv.innerHTML = `
+                    <h2>Sensor ${index + 1}</h2>
+                    <div class="value">${value}%</div>
+                `;
+                sensorDataDiv.appendChild(sensorDiv);
+            });
+        }
+    </script>
+</body>
+</html>

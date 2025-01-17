@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MQTT Display</title>
+    <!-- Include Paho MQTT Client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
+    <style>
+        .value-display {
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="value-display">
+        <h2>MQTT Values:</h2>
+        <p>Topic Value: <span id="mqttValue">Waiting for data...</span></p>
+    </div>
+
+    <script>
+        // MQTT client configuration
+        const clientId = 'webClient_' + Math.random().toString(16).substr(2, 8);
+        const host = "5.196.78.28";  // Replace with your MQTT broker address
+        const port = 8083;  // Usually 8083 for WebSocket connections
+        const topic = "sector_2";  // Replace with your MQTT topic
+
+        // Create a client instance
+        const client = new Paho.MQTT.Client(host, port, clientId);
+
+        // Set callback handlers
+        client.onConnectionLost = onConnectionLost; 
+        client.onMessageArrived = onMessageArrived;
+
+        // Connect to the MQTT broker
+        client.connect({
+            onSuccess: onConnect,
+            useSSL: true  // Set to true if your broker requires SSL/TLS
+        });
+
+        // Called when the client connects
+        function onConnect() {
+            console.log("Connected to MQTT broker");
+            client.subscribe(topic);
+        }
+
+        // Called when the client loses its connection
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("Connection lost: " + responseObject.errorMessage);
+            }
+        }
+
+        // Called when a message arrives
+        function onMessageArrived(message) {
+            console.log("Message received: " + message.payloadString);
+            document.getElementById("mqttValue").textContent = message.payloadString;
+        }
+    </script>
+</body>
+</html>

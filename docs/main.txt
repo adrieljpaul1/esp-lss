@@ -12,18 +12,14 @@
 #include "esp_adc/adc_cali.h"
 #include "esp_adc/adc_cali_scheme.h"
 
-#define WIFI_SSID1 "Main Server"
-#define WIFI_PASS1 "admin@123"
-//sir hotspot
-#define WIFI_SSID2 "realme"
-#define WIFI_PASS2 "ilakkiya"
-//mqtt
+#define WIFI_SSID "Main Server"
+#define WIFI_PASS "admin@123"
 #define MQTT_BROKER_URI "mqtt://5.196.78.28"
+#define TAG "ESP32"
+
 #define MOISTURE_TOPIC "sector_2" //get
 #define SPRINKLER_CONTROL_TOPIC "sector_2_sprinkler" //post
-//tags
-#define TAG "ESP32"
-//hardware 
+
 #define MOISTURE_SENSOR_COUNT 4
 #define VALVE_GPIO GPIO_NUM_4
 
@@ -96,8 +92,8 @@ static void connect_to_wifi() {
 
     wifi_config_t wifi_config = {
         .sta = {
-            .ssid = WIFI_SSID1,
-            .password = WIFI_PASS1
+            .ssid = WIFI_SSID,
+            .password = WIFI_PASS
         }
     };
 
@@ -145,7 +141,7 @@ static void init_adc() {
 static void publish_moisture_data(int *moisture_values) {
     char payload[128];
     snprintf(payload, sizeof(payload), "{\"moisture\":[%d,%d,%d,%d]}", moisture_values[0], moisture_values[1], moisture_values[2], moisture_values[3]);
-    esp_mqtt_client_publish(mqtt_client, MOISTURE_TOPIC, payload, 0, 1, 1);
+    esp_mqtt_client_publish(mqtt_client, MOISTURE_TOPIC, payload, 0, 1, 0);
 }
 
 void app_main() {
