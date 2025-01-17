@@ -4,6 +4,7 @@
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "esp_log.h"
+#include "esp_mac.h"
 #include "esp_wifi.h"
 #include "nvs_flash.h"
 #include "mqtt_client.h"
@@ -144,10 +145,14 @@ static void init_adc() {
 
 static void publish_moisture_data(int *moisture_values) {
     char payload[128];
-    snprintf(payload, sizeof(payload), "{\"moisture\":[%d,%d,%d,%d]}", moisture_values[0], moisture_values[1], moisture_values[2], moisture_values[3]);
+
+    snprintf(payload, sizeof(payload), "{\"moisture\":[%d,%d,%d,%d,%d]}", moisture_values[0], moisture_values[1], moisture_values[2], moisture_values[3],(moisture_values[0] + moisture_values[1] + moisture_values[2] + moisture_values[3]) / 4);
     esp_mqtt_client_publish(mqtt_client, MOISTURE_TOPIC, payload, 0, 1, 1);
 }
 
+static void log_mqtt(int *moisture_values){
+    ESP_LOGI(TAG, "Moisture = %d %d %d %d Average = %d",moisture_values[0], moisture_values[1], moisture_values[2], moisture_values[3],(moisture_values[0] + moisture_values[1] + moisture_values[2] + moisture_values[3]) / 4);
+}
 void app_main() {
   //init
     nvs_flash_init();
@@ -182,7 +187,7 @@ void app_main() {
         gpio_set_level(VALVE_GPIO, (avg_moisture <= 20) ? 1 : 0);
 
         publish_moisture_data(moisture_values);
-
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        log_mqtt(moisture_values);
+        vTaskDelay(pdMS_TO_TICKS(10000));
     }
 }
